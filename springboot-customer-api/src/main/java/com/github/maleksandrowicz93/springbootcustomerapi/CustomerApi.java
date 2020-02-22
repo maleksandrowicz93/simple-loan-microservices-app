@@ -18,9 +18,9 @@ public class CustomerApi {
     private CustomerService customerService;
 
     @GetMapping("/customer")
-    public List<Customer> getCustomers(@RequestBody List<Integer> creditsIds) {
+    public List<Customer> getCustomers(@RequestBody List<Integer> creditIds) {
         log.info("Getting customers...");
-        return null;
+        return customerService.getCustomers(creditIds);
     }
 
     @PostMapping("/customer")

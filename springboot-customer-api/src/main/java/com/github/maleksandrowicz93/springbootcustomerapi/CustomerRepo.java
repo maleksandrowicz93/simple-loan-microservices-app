@@ -12,4 +12,6 @@ public interface CustomerRepo extends JpaRepository<Customer, Integer> {
     @Query(value = "SELECT pesel FROM customer", nativeQuery = true)
     List<String> getPesels();
 
+    List<Customer> findByCreditId(int creditId);
+
 }

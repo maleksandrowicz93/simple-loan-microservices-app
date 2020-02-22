@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
@@ -28,8 +29,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getCustomers(List<Integer> creditsIds) {
-        return null;
+    public List<Customer> getCustomers(List<Integer> creditIds) {
+        List<Customer> customers = new ArrayList<>();
+        creditIds.forEach(id -> customers.addAll(customerRepo.findByCreditId(id)));
+        return customers;
     }
 
     @Override
