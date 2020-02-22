@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Log4j
@@ -23,11 +24,16 @@ public class CustomerApi {
     }
 
     @PostMapping("/customer")
-    public void saveCustomer(@RequestBody CustomerDto customerDto) {
+    public void saveCustomer(@RequestBody CustomerDto customerDto) throws SQLIntegrityConstraintViolationException {
         log.info("Converting Dto object to model...");
         Customer customer = customerService.convertFromDto(customerDto);
         log.info("Adding new customer...");
-        customerService.saveCustomer(customer);
+        try {
+            customerService.saveCustomer(customer);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            log.error("Customer with the same pesel exists!");
+            e.printStackTrace();
+        }
     }
 
 }

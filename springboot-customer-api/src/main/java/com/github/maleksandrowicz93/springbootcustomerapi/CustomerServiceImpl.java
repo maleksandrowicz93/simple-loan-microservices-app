@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @Log4j
@@ -14,9 +15,16 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepo customerRepo;
 
     @Override
-    public void saveCustomer(Customer customer) {
+    public void saveCustomer(Customer customer) throws SQLIntegrityConstraintViolationException {
+        if(checkIfCustomerExistsInDB(customer.getPesel()))
+            throw new  SQLIntegrityConstraintViolationException();
         customerRepo.save(customer);
-        log.info("Customer already has been saved.");
+        log.info("Adding new customer...");
+    }
+
+    private boolean checkIfCustomerExistsInDB(String pesel) {
+        List<String> pesels = customerRepo.getPesels();
+        return pesels.contains(pesel);
     }
 
     @Override
