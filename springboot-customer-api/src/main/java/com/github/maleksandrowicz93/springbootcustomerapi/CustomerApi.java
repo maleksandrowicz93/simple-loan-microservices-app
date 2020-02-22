@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j
@@ -18,14 +19,18 @@ public class CustomerApi {
     private CustomerService customerService;
 
     @GetMapping("/customer")
-    public List<Customer> getCustomers(@RequestBody List<Integer> creditIds) {
+    public List<CustomerDto> getCustomers(@RequestBody List<Integer> creditIds) {
         log.info("Getting customers...");
-        return customerService.getCustomers(creditIds);
+        List<Customer> customers = customerService.getCustomers(creditIds);
+        List<CustomerDto> customerDtoList = new ArrayList<>();
+        log.info("Converting Customer list to CustomerDto one...");
+        customers.forEach(c -> customerDtoList.add(customerService.convertFromCustomer(c)));
+        return customerDtoList;
     }
 
     @PostMapping("/customer")
     public void saveCustomer(@RequestBody CustomerDto customerDto) throws SQLIntegrityConstraintViolationException {
-        log.info("Converting Dto object to model...");
+        log.info("Converting CustomerDto instance to Customer one...");
         Customer customer = customerService.convertFromDto(customerDto);
         log.info("Adding new customer...");
         try {

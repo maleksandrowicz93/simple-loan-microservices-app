@@ -46,7 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto convertFromCustomer(Customer customer) {
-        return null;
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setFirstName(customer.getFirstName());
+        customerDto.setSurname(customer.getSurname());
+        customerDto.setPesel(customer.getPesel());
+        return customerDto;
     }
 
 }
