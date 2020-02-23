@@ -11,6 +11,5 @@ public interface CustomerService {
     void saveCustomer(Customer customer) throws SQLIntegrityConstraintViolationException;
     List<Customer> getCustomers(List<Integer> creditsIds);
     Customer convertFromDto(CustomerDto customerDto);
-    CustomerDto convertFromCustomer(Customer customer);
-
+    List<CustomerDto> convertFromCustomerList(List<Customer> customers);
 }
