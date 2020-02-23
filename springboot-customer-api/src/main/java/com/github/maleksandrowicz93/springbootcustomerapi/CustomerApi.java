@@ -20,25 +20,14 @@ public class CustomerApi {
 
     @GetMapping("/customer")
     public List<CustomerDto> getCustomers(@RequestBody List<Integer> creditIds) {
-        log.info("Getting customers...");
         List<Customer> customers = customerService.getCustomers(creditIds);
-        List<CustomerDto> customerDtoList = new ArrayList<>();
-        log.info("Converting Customer list to CustomerDto one...");
-        customers.forEach(c -> customerDtoList.add(customerService.convertFromCustomer(c)));
-        return customerDtoList;
+        return customerService.convertFromCustomerList(customers);
     }
 
     @PostMapping("/customer")
     public void saveCustomer(@RequestBody CustomerDto customerDto) throws SQLIntegrityConstraintViolationException {
-        log.info("Converting CustomerDto instance to Customer one...");
         Customer customer = customerService.convertFromDto(customerDto);
-        log.info("Adding new customer...");
-        try {
-            customerService.saveCustomer(customer);
-        } catch (SQLIntegrityConstraintViolationException e) {
-            log.error("Customer with the same pesel exists!");
-            e.printStackTrace();
-        }
+        customerService.saveCustomer(customer);
     }
 
 }

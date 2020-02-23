@@ -7,36 +7,50 @@ import org.springframework.stereotype.Component;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j
 @Component
 public class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
     private CustomerRepo customerRepo;
 
-    @Override
-    public void saveCustomer(Customer customer) throws SQLIntegrityConstraintViolationException {
-        if(checkIfCustomerExistsInDB(customer.getPesel()))
-            throw new  SQLIntegrityConstraintViolationException();
-        customerRepo.save(customer);
-        log.info("Adding new customer...");
+    @Autowired
+    public CustomerServiceImpl(CustomerRepo customerRepo) {
+        this.customerRepo = customerRepo;
     }
 
-    private boolean checkIfCustomerExistsInDB(String pesel) {
+    @Override
+    public void saveCustomer(Customer customer) {
+        try {
+            checkIfCustomerExistsInDB(customer.getPesel());
+            log.info("Adding new customer...");
+            customerRepo.save(customer);
+        } catch (SQLIntegrityConstraintViolationException e) {
+            log.error("Customer with the same pesel exists in DB!");
+            e.printStackTrace();
+        }
+    }
+
+    private void checkIfCustomerExistsInDB(String pesel) throws SQLIntegrityConstraintViolationException {
+        log.info("Checking if customer exists in DB by pesel");
         List<String> pesels = customerRepo.getPesels();
-        return pesels.contains(pesel);
+        if(pesels.contains(pesel))
+            throw new  SQLIntegrityConstraintViolationException();
     }
 
     @Override
     public List<Customer> getCustomers(List<Integer> creditIds) {
-        List<Customer> customers = new ArrayList<>();
-        creditIds.forEach(id -> customers.addAll(customerRepo.findByCreditId(id)));
-        return customers;
+        log.info("Getting customers...");
+        List<Customer> allCustomers = customerRepo.findAll();
+        return allCustomers.stream()
+                .filter(c -> creditIds.contains(c.getCreditId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Customer convertFromDto(CustomerDto customerDto) {
+        log.info("Converting CustomerDto instance to Customer one...");
         Customer customer = new Customer();
         customer.setFirstName(customerDto.getFirstName());
         customer.setSurname(customerDto.getSurname());
@@ -45,7 +59,15 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto convertFromCustomer(Customer customer) {
+    public List<CustomerDto> convertFromCustomerList(List<Customer> customers) {
+        log.info("Converting Customer list to CustomerDto one...");
+        List<CustomerDto> customerDtoList = new ArrayList<>();
+        customers.forEach(c -> customerDtoList.add(convertFromCustomer(c)));
+        return customerDtoList;
+    }
+
+    private CustomerDto convertFromCustomer(Customer customer) {
+        log.info("Converting Customer instance to CustomerDto one...");
         CustomerDto customerDto = new CustomerDto();
         customerDto.setFirstName(customer.getFirstName());
         customerDto.setSurname(customer.getSurname());
