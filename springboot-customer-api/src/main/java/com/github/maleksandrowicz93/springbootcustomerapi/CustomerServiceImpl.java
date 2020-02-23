@@ -7,13 +7,18 @@ import org.springframework.stereotype.Component;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j
 @Component
 public class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
     private CustomerRepo customerRepo;
+
+    @Autowired
+    public CustomerServiceImpl(CustomerRepo customerRepo) {
+        this.customerRepo = customerRepo;
+    }
 
     @Override
     public void saveCustomer(Customer customer) {
@@ -37,13 +42,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<Customer> getCustomers(List<Integer> creditIds) {
         log.info("Getting customers...");
-        List<Customer> customers = new ArrayList<>();
-        creditIds.forEach(id -> customers.addAll(customerRepo.findByCreditId(id)));
-        return customers;
+        List<Customer> allCustomers = customerRepo.findAll();
+        return allCustomers.stream()
+                .filter(c -> creditIds.contains(c.getCreditId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Customer convertFromDto(CustomerDto customerDto) {
+        log.info("Converting CustomerDto instance to Customer one...");
         Customer customer = new Customer();
         customer.setFirstName(customerDto.getFirstName());
         customer.setSurname(customerDto.getSurname());
@@ -60,7 +67,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private CustomerDto convertFromCustomer(Customer customer) {
-        log.info("Converting CustomerDto instance to Customer one...");
+        log.info("Converting Customer instance to CustomerDto one...");
         CustomerDto customerDto = new CustomerDto();
         customerDto.setFirstName(customer.getFirstName());
         customerDto.setSurname(customer.getSurname());
