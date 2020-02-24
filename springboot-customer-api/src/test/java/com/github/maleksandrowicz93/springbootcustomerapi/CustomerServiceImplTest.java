@@ -42,22 +42,19 @@ class CustomerServiceImplTest {
         expectedCustomer.setFirstName("John");
         expectedCustomer.setSurname("Brennox");
         expectedCustomer.setPesel("00000000000");
+        expectedCustomer.setCreditId(1);
         customerDBImage.addAll(prepareMockData());
     }
 
     private List<Customer> prepareMockData() {
         List<Customer> customers = new ArrayList<>();
-        Customer customer1 = new Customer("John", "Pesci", "11111111111");
-        customer1.setCreditId(1);
+        Customer customer1 = new Customer(1, "John", "Pesci", "11111111111");
         customers.add(customer1);
-        Customer customer2 = new Customer("Joaquin", "Phoenix", "22222222222");
-        customer2.setCreditId(2);
+        Customer customer2 = new Customer(2,"Joaquin", "Phoenix", "22222222222");
         customers.add(customer2);
-        Customer customer3 = new Customer("Rami", "Malek", "33333333333");
-        customer3.setCreditId(2);
+        Customer customer3 = new Customer(2,"Rami", "Malek", "33333333333");
         customers.add(customer3);
-        Customer customer4 = new Customer("Robert", "Lewandowski", "44444444444");
-        customer4.setCreditId(3);
+        Customer customer4 = new Customer(3, "Robert", "Lewandowski", "44444444444");
         customers.add(customer4);
         return customers;
     }
@@ -65,32 +62,14 @@ class CustomerServiceImplTest {
     @Test
     void save_customer() {
         //given
-        mockSaveCustomer();
-        //when
-        customerService.saveCustomer(new Customer());
-        //then
-        assertTrue(customerDBImage.contains(expectedCustomer));
-    }
-
-    private void mockSaveCustomer() {
         when(customerRepo.save(any(Customer.class))).thenAnswer(invocationOnMock ->  {
             customerDBImage.add(expectedCustomer);
             return expectedCustomer;
         });
-    }
-
-    @Test
-    void save_existing_customer() {
-        //given
-        mockSaveCustomer();
         //when
         customerService.saveCustomer(new Customer());
-        customerService.saveCustomer(new Customer());
         //then
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-            if (customerDBImage.get(customerDBImage.size()-1) == customerDBImage.get(customerDBImage.size()-2))
-                throw new SQLIntegrityConstraintViolationException();
-        });
+        assertTrue(customerDBImage.contains(expectedCustomer));
     }
 
     @Test
@@ -110,18 +89,20 @@ class CustomerServiceImplTest {
         CustomerDto toConvert = new CustomerDto(
                 expectedCustomer.getFirstName(),
                 expectedCustomer.getSurname(),
-                expectedCustomer.getPesel()
+                expectedCustomer.getPesel(),
+                expectedCustomer.getCreditId()
         );
         //when
         Customer converted = customerService.convertFromDto(toConvert);
         //then
         assertTrue(expectedCustomer.getFirstName().equals(converted.getFirstName())
                 && expectedCustomer.getSurname().equals(converted.getSurname())
-                && expectedCustomer.getPesel().equals(converted.getPesel()));
+                && expectedCustomer.getPesel().equals(converted.getPesel())
+                && expectedCustomer.getCreditId().intValue() == converted.getCreditId().intValue());
     }
 
     @Test
-    void convertFromCustomerList() {
+    void convert_from_customer_list() {
         //given
         List<Customer> customers = prepareMockData();
         //when
@@ -133,7 +114,8 @@ class CustomerServiceImplTest {
             CustomerDto customerDto = customerDtoList.get(i);
             assertTrue(customerDto.getFirstName().equals(c.getFirstName())
                     && customerDto.getSurname().equals(c.getSurname())
-                    && customerDto.getPesel().equals(c.getPesel()));
+                    && customerDto.getPesel().equals(c.getPesel())
+                    && customerDto.getCreditId() == c.getCreditId());
         }
     }
 

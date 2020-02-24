@@ -8,8 +8,9 @@ import java.util.List;
 @Service
 public interface CustomerService {
 
-    void saveCustomer(Customer customer) throws SQLIntegrityConstraintViolationException;
     List<Customer> getCustomers(List<Integer> creditsIds);
-    Customer convertFromDto(CustomerDto customerDto);
     List<CustomerDto> convertFromCustomerList(List<Customer> customers);
+    Customer convertFromDto(CustomerDto customerDto);
+    void saveCustomer(Customer customer) throws SQLIntegrityConstraintViolationException;
+
 }

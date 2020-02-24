@@ -14,15 +14,17 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private Integer creditId;
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
     private String surname;
-    @Column(nullable = false, unique = true, length = 13)
+    @Column(nullable = false, length = 13)
     private String pesel;
 
-    public Customer(String firstName, String surname, String pesel) {
+    public Customer(Integer creditId, String firstName, String surname, String pesel) {
+        this.creditId = creditId;
         this.firstName = firstName;
         this.surname = surname;
         this.pesel = pesel;
