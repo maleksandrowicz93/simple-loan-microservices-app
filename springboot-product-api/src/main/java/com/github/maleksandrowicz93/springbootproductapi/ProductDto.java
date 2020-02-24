@@ -9,7 +9,7 @@ import lombok.Setter;
 public class ProductDto {
 
     private int creditId;
-    private String productName;
+    private ProductEnum productName;
     private Integer value;
 
 }

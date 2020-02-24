@@ -1,5 +1,6 @@
 package com.github.maleksandrowicz93.springbootproductapi;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,11 +18,12 @@ public class Product {
     @Column(nullable = false)
     private Integer creditId;
     @Column(nullable = false)
-    private String productName;
+    @Enumerated(EnumType.STRING)
+    private ProductEnum productName;
     @Column(nullable = false)
     private Integer value;
 
-    public Product(Integer creditId, String productName, Integer value) {
+    public Product(Integer creditId, ProductEnum productName, Integer value) {
         this.creditId = creditId;
         this.productName = productName;
         this.value = value;
