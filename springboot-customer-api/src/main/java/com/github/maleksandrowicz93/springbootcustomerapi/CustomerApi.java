@@ -3,7 +3,6 @@ package com.github.maleksandrowicz93.springbootcustomerapi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 @RestController
@@ -20,7 +19,7 @@ public class CustomerApi {
     }
 
     @PostMapping()
-    public void CreateCustomer (@RequestBody CustomerDto customerDto) throws SQLIntegrityConstraintViolationException {
+    public void CreateCustomer (@RequestBody CustomerDto customerDto) {
         Customer customer = customerService.convertFromDto(customerDto);
         customerService.saveCustomer(customer);
     }
