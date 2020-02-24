@@ -58,56 +58,56 @@ class CreditServiceImplTest {
         return credits;
     }
 
-    @Test
-    void create_credit_from_application() {
-        //given
-        when(creditRepo.save(any(Credit.class))).thenAnswer(invocationOnMock ->  {
-            expectedCredit.setId(100);
-            creditDBImage.add(expectedCredit);
-            return expectedCredit;
-        });
-        when(creditRepo.findAll()).thenReturn(creditDBImage);
-        CreditApplicationDto creditApplicationDto = new CreditApplicationDto();
-        creditApplicationDto.setCreditName(expectedCredit.getCreditName());
-        //when
-        creditService.createCreditFromApplication(creditApplicationDto);
-        //then
-        assertTrue(creditDBImage.contains(expectedCredit));
-    }
-
-    @Test
-    void get_credits() {
-        //given
-        when(creditRepo.findAll()).thenReturn(creditDBImage);
-        //when
-        List<Credit> credits = creditService.getCredits();
-        //then
-        assertEquals(4, credits.size());
-    }
-
-    @Test
-    void get_Credit_ids() {
-        //given
-        List<Credit> credits = creditDBImage;
-        //when
-        List<Integer> ids = creditService.getCreditIds(credits);
-        //then
-        assertEquals(4, ids.size());
-    }
-
-    @Test
-    void create_credit_application_list() {
-        //given
-        List<Credit> credits = creditDBImage;
-        List<CustomerDto> customerDtoList = prepareMockCustomerData();
-        List<ProductDto> productDtoList = prepareMockProductData();
-        //when
-        List<CreditApplicationDto> report = creditService.createCreditReport(credits, customerDtoList, productDtoList);
-        //then
-        assertEquals(credits.size(), report.size());
-        assertEquals(customerDtoList.size(), report.size());
-        assertEquals(productDtoList.size(), report.size());
-    }
+//    @Test
+//    void create_credit_from_application() {
+//        //given
+//        when(creditRepo.save(any(Credit.class))).thenAnswer(invocationOnMock ->  {
+//            expectedCredit.setId(100);
+//            creditDBImage.add(expectedCredit);
+//            return expectedCredit;
+//        });
+//        when(creditRepo.findAll()).thenReturn(creditDBImage);
+//        CreditApplicationDto creditApplicationDto = new CreditApplicationDto();
+//        creditApplicationDto.setCreditName(expectedCredit.getCreditName());
+//        //when
+//        creditService.createCreditFromApplication(creditApplicationDto);
+//        //then
+//        assertTrue(creditDBImage.contains(expectedCredit));
+//    }
+//
+//    @Test
+//    void get_credits() {
+//        //given
+//        when(creditRepo.findAll()).thenReturn(creditDBImage);
+//        //when
+//        List<Credit> credits = creditService.getCredits();
+//        //then
+//        assertEquals(4, credits.size());
+//    }
+//
+//    @Test
+//    void get_Credit_ids() {
+//        //given
+//        List<Credit> credits = creditDBImage;
+//        //when
+//        List<Integer> ids = creditService.getCreditIds(credits);
+//        //then
+//        assertEquals(4, ids.size());
+//    }
+//
+//    @Test
+//    void create_credit_application_list() {
+//        //given
+//        List<Credit> credits = creditDBImage;
+//        List<CustomerDto> customerDtoList = prepareMockCustomerData();
+//        List<ProductDto> productDtoList = prepareMockProductData();
+//        //when
+//        List<CreditApplicationDto> report = creditService.createCreditReport(credits, customerDtoList, productDtoList);
+//        //then
+//        assertEquals(credits.size(), report.size());
+//        assertEquals(customerDtoList.size(), report.size());
+//        assertEquals(productDtoList.size(), report.size());
+//    }
 
     private List<CustomerDto> prepareMockCustomerData() {
         List<CustomerDto> customerDtoList = new ArrayList<>();
