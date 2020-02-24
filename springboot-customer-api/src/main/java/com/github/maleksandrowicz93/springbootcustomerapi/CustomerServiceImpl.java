@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,31 +12,8 @@ import java.util.stream.Collectors;
 @Component
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerRepo customerRepo;
-
     @Autowired
-    public CustomerServiceImpl(CustomerRepo customerRepo) {
-        this.customerRepo = customerRepo;
-    }
-
-    @Override
-    public void saveCustomer(Customer customer) {
-        try {
-            checkIfCustomerExistsInDB(customer.getPesel());
-            log.info("Adding new customer...");
-            customerRepo.save(customer);
-        } catch (SQLIntegrityConstraintViolationException e) {
-            log.error("Customer with the same pesel exists in DB!");
-            e.printStackTrace();
-        }
-    }
-
-    private void checkIfCustomerExistsInDB(String pesel) throws SQLIntegrityConstraintViolationException {
-        log.info("Checking if customer exists in DB by pesel");
-        List<String> pesels = customerRepo.getPesels();
-        if(pesels.contains(pesel))
-            throw new  SQLIntegrityConstraintViolationException();
-    }
+    private CustomerRepo customerRepo;
 
     @Override
     public List<Customer> getCustomers(List<Integer> creditIds) {
@@ -46,16 +22,6 @@ public class CustomerServiceImpl implements CustomerService {
         return allCustomers.stream()
                 .filter(c -> creditIds.contains(c.getCreditId()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Customer convertFromDto(CustomerDto customerDto) {
-        log.info("Converting CustomerDto instance to Customer one...");
-        Customer customer = new Customer();
-        customer.setFirstName(customerDto.getFirstName());
-        customer.setSurname(customerDto.getSurname());
-        customer.setPesel(customerDto.getPesel());
-        return customer;
     }
 
     @Override
@@ -72,7 +38,25 @@ public class CustomerServiceImpl implements CustomerService {
         customerDto.setFirstName(customer.getFirstName());
         customerDto.setSurname(customer.getSurname());
         customerDto.setPesel(customer.getPesel());
+        customerDto.setCreditId(customer.getCreditId());
         return customerDto;
+    }
+
+    @Override
+    public Customer convertFromDto(CustomerDto customerDto) {
+        log.info("Converting CustomerDto instance to Customer one...");
+        Customer customer = new Customer();
+        customer.setFirstName(customerDto.getFirstName());
+        customer.setSurname(customerDto.getSurname());
+        customer.setPesel(customerDto.getPesel());
+        customer.setCreditId(customerDto.getCreditId());
+        return customer;
+    }
+
+    @Override
+    public void saveCustomer(Customer customer) {
+        log.info("Adding new customer...");
+        customerRepo.save(customer);
     }
 
 }
