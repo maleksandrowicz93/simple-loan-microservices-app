@@ -1,4 +1,5 @@
-package com.github.maleksandrowicz93.springbootcustomerapi;
+package com.github.maleksandrowicz93.springbootproductapi;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
-public class Customer {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,16 +18,14 @@ public class Customer {
     @Column(nullable = false)
     private Integer creditId;
     @Column(nullable = false)
-    private String firstName;
+    @Enumerated(EnumType.STRING)
+    private ProductEnum productName;
     @Column(nullable = false)
-    private String surname;
-    @Column(nullable = false, length = 13)
-    private String pesel;
+    private Integer value;
 
-    public Customer(Integer creditId, String firstName, String surname, String pesel) {
+    public Product(Integer creditId, ProductEnum productName, Integer value) {
         this.creditId = creditId;
-        this.firstName = firstName;
-        this.surname = surname;
-        this.pesel = pesel;
+        this.productName = productName;
+        this.value = value;
     }
 }
