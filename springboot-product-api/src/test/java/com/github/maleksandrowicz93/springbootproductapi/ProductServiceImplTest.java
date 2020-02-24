@@ -61,32 +61,14 @@ class ProductServiceImplTest {
     @Test
     void save_product() {
         //given
-        mockSaveProduct();
-        //when
-        productService.saveProduct(new Product());
-        //then
-        assertTrue(productDBImage.contains(expectedProduct));
-    }
-
-    private void mockSaveProduct() {
         when(productRepo.save(any(Product.class))).thenAnswer(invocationOnMock ->  {
             productDBImage.add(expectedProduct);
             return expectedProduct;
         });
-    }
-
-    @Test
-    void save_existing_product() {
-        //given
-        mockSaveProduct();
         //when
         productService.saveProduct(new Product());
-        productService.saveProduct(new Product());
         //then
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> {
-            if (productDBImage.get(productDBImage.size()-1) == productDBImage.get(productDBImage.size()-2))
-                throw new SQLIntegrityConstraintViolationException();
-        });
+        assertTrue(productDBImage.contains(expectedProduct));
     }
 
     @Test
