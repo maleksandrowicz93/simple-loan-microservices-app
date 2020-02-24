@@ -14,13 +14,15 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private Integer creditId;
     @Column(nullable = false)
     private String productName;
     @Column(nullable = false)
     private Integer value;
 
-    public Product(String productName, Integer value) {
+    public Product(Integer creditId, String productName, Integer value) {
+        this.creditId = creditId;
         this.productName = productName;
         this.value = value;
     }

@@ -1,5 +1,6 @@
 package com.github.maleksandrowicz93.springbootproductapi;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,13 +9,19 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductApi {
 
-    @GetMapping("/customer")
+    @Autowired
+    private ProductService productService;
+
+    @GetMapping()
     public List<ProductDto> GetProducts(@RequestBody List<Integer> creditIds) {
-        return null;
+        List<Product> products = productService.getProducts(creditIds);
+        return productService.convertFromProductList(products);
     }
 
-    @PostMapping("/customer")
-    public void CreateProduct(@RequestBody ProductDto productDto, @RequestBody Integer creditId) {
+    @PostMapping()
+    public void CreateProduct(@RequestBody ProductDto productDto) {
+        Product product = productService.convertFromDto(productDto);
+        productService.saveProduct(product);
     }
 
 }

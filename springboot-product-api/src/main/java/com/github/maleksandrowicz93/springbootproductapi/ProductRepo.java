@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.beans.Customizer;
 
 @Repository
-public interface ProductRepo extends JpaRepository<Customizer, Integer> {
+public interface ProductRepo extends JpaRepository<Product, Integer> {
 }
