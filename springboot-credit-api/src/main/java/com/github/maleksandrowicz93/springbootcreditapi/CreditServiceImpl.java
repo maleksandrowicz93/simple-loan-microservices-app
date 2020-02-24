@@ -25,7 +25,11 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public List<CreditApplicationDto> createCreditApplicationList(List<Credit> credits, List<CustomerDto> customerDtoList, List<ProductDto> productDtoList) {
+    public List<CreditApplicationDto> createCreditReport(
+            List<Credit> credits,
+            List<CustomerDto> customerDtoList,
+            List<ProductDto> productDtoList
+    ) {
         return null;
     }
 

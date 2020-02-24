@@ -56,7 +56,7 @@ public class CreditApi {
                     creditIds
             );
             List<ProductDto> productDtoList = Arrays.asList(GetProductsExchange.getBody());
-            creditReport.addAll(creditService.createCreditApplicationList(credits, customerDtoList, productDtoList));
+            creditReport.addAll(creditService.createCreditReport(credits, customerDtoList, productDtoList));
         }
         return creditReport;
     }

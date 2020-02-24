@@ -10,7 +10,7 @@ public interface CreditService {
     Credit createCreditFromApplication(CreditApplicationDto creditApplicationDto);
     List<Credit> getCredits();
     List<Integer> getCreditIds(List<Credit> credits);
-    List<CreditApplicationDto> createCreditApplicationList(
+    List<CreditApplicationDto> createCreditReport(
             List<Credit> credits,
             List<CustomerDto> customerDtoList,
             List<ProductDto> productDtoList
