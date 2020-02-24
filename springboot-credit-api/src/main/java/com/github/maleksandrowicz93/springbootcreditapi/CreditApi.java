@@ -26,10 +26,12 @@ public class CreditApi {
 
     @PostMapping
     public int CreateCredit(@RequestBody CreditApplicationDto creditApplicationDto) {
-        Credit credit = creditService.createCreditFromApplication(creditApplicationDto);
+        int creditId = creditService.createCreditFromApplication(creditApplicationDto).getId();
         ProductDto productDto = creditApplicationDto.getProductDto();
+        productDto.setCreditId(creditId);
         restTemplate.postForObject("http://" + HOST_NAME + ":8020/product", productDto, ProductDto.class);
         CustomerDto customerDto = creditApplicationDto.getCustomerDto();
+        customerDto.setCreditId(creditId);
         restTemplate.postForObject("http://" + HOST_NAME + ":8010/customer", customerDto, CustomerDto.class);
         return 0;
     }
