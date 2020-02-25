@@ -3,11 +3,8 @@ package com.github.maleksandrowicz93.springbootcreditapi;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -21,19 +18,22 @@ public class CreditServiceImpl implements CreditService {
     @Autowired
     private CreditRepo creditRepo;
     @Autowired
-    private RestTemplate restTemplate;
+    private RestService restService;
+
 
     @Override
     public int createCredit(CreditApplicationDto creditApplicationDto) {
         int creditId = createCreditFromApplication(creditApplicationDto).getId();
         ProductDto productDto = creditApplicationDto.getProductDto();
         productDto.setCreditId(creditId);
+        String productUrl = "http://" + HOST_NAME + ":8020/product";
         log.info("Sending add new product request...");
-        restTemplate.postForObject("http://" + HOST_NAME + ":8020/product", productDto, ProductDto.class);
+        restService.post(productUrl, productDto);
         CustomerDto customerDto = creditApplicationDto.getCustomerDto();
         customerDto.setCreditId(creditId);
+        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
         log.info("Sending add new customer request...");
-        restTemplate.postForObject("http://" + HOST_NAME + ":8010/customer", customerDto, CustomerDto.class);
+        restService.post(customerUrl, customerDto);
         log.info("Returning new credit id...");
         return creditId;
     }
@@ -42,10 +42,12 @@ public class CreditServiceImpl implements CreditService {
     public List<CreditApplicationDto> getCreditReport() {
         List<Credit> credits = getCredits();
         Object[] creditIds = getCreditIds(credits).toArray();
+        String customerUrl = "http://" + HOST_NAME + ":8010/customer/ids";
         log.info("Sending request to set required credit ids for customers...");
-        restTemplate.postForObject("http://" + HOST_NAME + ":8010/customer/ids", creditIds, Object[].class);
+        restService.post(customerUrl, creditIds);
+        String productUrl = "http://" + HOST_NAME + ":8020/product/ids";
         log.info("Sending request to set required credit ids for products...");
-        restTemplate.postForObject("http://" + HOST_NAME + ":8020/product/ids", creditIds, Object[].class);
+        restService.post(productUrl, creditIds);
         List<CreditApplicationDto> creditReport = new ArrayList<>();
         if (!credits.isEmpty()) {
             List<CustomerDto> customerDtoList = getCustomers();
@@ -80,25 +82,17 @@ public class CreditServiceImpl implements CreditService {
     }
 
     private List<CustomerDto> getCustomers() {
+        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
         log.info("Sending request for get customers...");
-        ResponseEntity<CustomerDto[]> GetCustomersExchange = restTemplate.exchange(
-                "http://" + HOST_NAME + ":8010/customer",
-                HttpMethod.GET,
-                HttpEntity.EMPTY,
-                CustomerDto[].class
-        );
+        ResponseEntity<CustomerDto[]> GetCustomersExchange = (ResponseEntity<CustomerDto[]>) restService.get(customerUrl, CustomerDto[].class);
         CustomerDto[] customerDtos = GetCustomersExchange.getBody();
         return  (customerDtos != null) ? Arrays.asList(customerDtos) : new ArrayList<>();
     }
 
     private List<ProductDto> getProducts() {
+        String productUrl = "http://" + HOST_NAME + ":8020/product";
         log.info("Sending request for get products...");
-        ResponseEntity<ProductDto[]> GetProductsExchange = restTemplate.exchange(
-                "http://" + HOST_NAME + ":8020/product",
-                HttpMethod.GET,
-                HttpEntity.EMPTY,
-                ProductDto[].class
-        );
+        ResponseEntity<ProductDto[]> GetProductsExchange = (ResponseEntity<ProductDto[]>) restService.get(productUrl, ProductDto[].class);
         ProductDto[] productDtos = GetProductsExchange.getBody();
         return  (productDtos != null) ? Arrays.asList(productDtos) : new ArrayList<>();
     }
