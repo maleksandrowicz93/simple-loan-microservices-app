@@ -21,7 +21,7 @@ services:
       - loanDb
   loanDb:
     container_name: 'loanDb'
-    image: mysql
+    image: mysql:8.0.19
     environment:
       MYSQL_PASSWORD: pass
       MYSQL_ROOT_PASSWORD: pass
