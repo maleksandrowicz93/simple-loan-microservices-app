@@ -19,8 +19,8 @@ Do testowania plikacji i wywoływania usług zaleca się aplikację postman. Pon
 
 {
 	"customerDto": {
-		"firstName": "mati1",
-		"surname": "aleks1",
+		"firstName": "John1",
+		"surname": "Brennox1",
 		"pesel": "00000000001"
 	},
 	"productDto": {
@@ -29,5 +29,14 @@ Do testowania plikacji i wywoływania usług zaleca się aplikację postman. Pon
 	},
 	"creditName": "mati_aleks_0000000_CARD_500"
 }
+
+Zastosowano walidację o następujących warunkach brzegowych:
+
+	- odrzuca się zapytanie z polami typu String o mniejszej ilości znaków, niż 2,
+	- odrzuca się zapytanie z polami typu String, w których zawarta jest liczba,
+	- odrzuca się zapytanie z numerem pesel o długości innej niż 1 znaków,
+	- odrzuca się zapytanie z numerem pesel zawierających litery,
+	- odrzuca się zapytanie z kwotą mniejszą niż 100, 
+	- odrzuca się zapytanie z nullami.
 
  
