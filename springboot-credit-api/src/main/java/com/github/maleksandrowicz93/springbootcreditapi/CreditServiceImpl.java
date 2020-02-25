@@ -3,7 +3,6 @@ package com.github.maleksandrowicz93.springbootcreditapi;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -19,7 +18,8 @@ public class CreditServiceImpl implements CreditService {
     private CreditRepo creditRepo;
     @Autowired
     private RestService restService;
-
+    @Autowired
+    private ApiDataGetter apiDataGetter;
 
     @Override
     public int createCredit(CreditApplicationDto creditApplicationDto) {
@@ -50,8 +50,8 @@ public class CreditServiceImpl implements CreditService {
         restService.post(productUrl, creditIds);
         List<CreditApplicationDto> creditReport = new ArrayList<>();
         if (!credits.isEmpty()) {
-            List<CustomerDto> customerDtoList = getCustomers();
-            List<ProductDto> productDtoList = getProducts();
+            List<CustomerDto> customerDtoList = apiDataGetter.getCustomers();
+            List<ProductDto> productDtoList = apiDataGetter.getProducts();
             creditReport.addAll(createCreditReport(credits, customerDtoList, productDtoList));
         }
         return creditReport;
@@ -81,19 +81,19 @@ public class CreditServiceImpl implements CreditService {
         return list;
     }
 
-    private List<CustomerDto> getCustomers() {
-        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
-        log.info("Sending request for get customers...");
-        CustomerDto[] customerDtos = (CustomerDto[]) restService.getResponseBody(customerUrl, CustomerDto[].class);
-        return  (customerDtos != null) ? Arrays.asList(customerDtos) : new ArrayList<>();
-    }
+//    private List<CustomerDto> getCustomers() {
+//        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
+//        log.info("Sending request for get customers...");
+//        CustomerDto[] customerDtos = (CustomerDto[]) restService.getResponseBody(customerUrl, CustomerDto[].class);
+//        return  (customerDtos != null) ? Arrays.asList(customerDtos) : new ArrayList<>();
+//    }
 
-    private List<ProductDto> getProducts() {
-        String productUrl = "http://" + HOST_NAME + ":8020/product";
-        log.info("Sending request for get products...");
-        ProductDto[] productDtos = (ProductDto[]) restService.getResponseBody(productUrl, ProductDto[].class);
-        return  (productDtos != null) ? Arrays.asList(productDtos) : new ArrayList<>();
-    }
+//    private List<ProductDto> getProducts() {
+//        String productUrl = "http://" + HOST_NAME + ":8020/product";
+//        log.info("Sending request for get products...");
+//        ProductDto[] productDtos = (ProductDto[]) restService.getResponseBody(productUrl, ProductDto[].class);
+//        return  (productDtos != null) ? Arrays.asList(productDtos) : new ArrayList<>();
+//    }
 
     private List<CreditApplicationDto> createCreditReport(
             List<Credit> credits,
