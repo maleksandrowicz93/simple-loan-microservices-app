@@ -20,7 +20,7 @@ public class Customer {
     private String firstName;
     @Column(nullable = false)
     private String surname;
-    @Column(nullable = false, length = 13)
+    @Column(nullable = false, length = 11)
     private String pesel;
 
     public Customer(Integer creditId, String firstName, String surname, String pesel) {
