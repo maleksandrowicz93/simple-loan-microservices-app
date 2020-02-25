@@ -11,6 +11,5 @@ public class CustomerDto {
     private String firstName;
     private String surname;
     private String pesel;
-    private int creditId;
 
 }
