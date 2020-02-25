@@ -11,8 +11,10 @@ import java.util.*;
 @Component
 public class CreditServiceImpl implements CreditService {
 
-    @Value("${HOST_NAME}")
-    private String HOST_NAME;
+    @Value("${CUSTOMER_API}")
+    private String CUSTOMER_API;
+    @Value("${PRODUCT_API}")
+    private String PRODUCT_API;
 
     @Autowired
     private CreditRepo creditRepo;
@@ -27,14 +29,14 @@ public class CreditServiceImpl implements CreditService {
         ProductDto productDto = creditApplicationDto.getProductDto();
         CustomerDto customerDto = creditApplicationDto.getCustomerDto();
 
-        String productUrl = "http://" + HOST_NAME + ":8020/product";
+        String productUrl = "http://" + PRODUCT_API + ":8020/product";
         String productIdUrl = productUrl.concat("/creditId");
         log.info("Sending credit id for new product request...");
         restService.post(productIdUrl, creditId);
         log.info("Sending add new product request...");
         restService.post(productUrl, productDto);
 
-        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
+        String customerUrl = "http://" + CUSTOMER_API + ":8010/customer";
         String customerIdUrl = customerUrl.concat("/creditId");
         log.info("Sending credit id for new customer request...");
         restService.post(customerIdUrl, creditId);
@@ -49,10 +51,10 @@ public class CreditServiceImpl implements CreditService {
     public List<CreditApplicationDto> getCreditReport() {
         List<Credit> credits = getCredits();
         Object[] creditIds = getCreditIds(credits).toArray();
-        String customerUrl = "http://" + HOST_NAME + ":8010/customer/ids";
+        String customerUrl = "http://" + CUSTOMER_API + ":8010/customer/ids";
         log.info("Sending request to set required credit ids for customers...");
         restService.post(customerUrl, creditIds);
-        String productUrl = "http://" + HOST_NAME + ":8020/product/ids";
+        String productUrl = "http://" + PRODUCT_API + ":8020/product/ids";
         log.info("Sending request to set required credit ids for products...");
         restService.post(productUrl, creditIds);
         List<CreditApplicationDto> creditReport = new ArrayList<>();
