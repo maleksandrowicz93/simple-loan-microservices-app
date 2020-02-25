@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDto> convertFromCustomerList(List<Customer> customers) {
         log.info("Converting Customer list to CustomerDto one...");
-        List<CustomerDto> customerDtoList = new ArrayList<>();
-        customers.forEach(c -> customerDtoList.add(convertFromCustomer(c)));
-        return customerDtoList;
+        return customers.stream()
+                .sorted(Comparator.comparing(Customer::getCreditId))
+                .map(this::convertFromCustomer)
+                .collect(Collectors.toList());
     }
 
     private CustomerDto convertFromCustomer(Customer customer) {
@@ -38,7 +40,6 @@ public class CustomerServiceImpl implements CustomerService {
         customerDto.setFirstName(customer.getFirstName());
         customerDto.setSurname(customer.getSurname());
         customerDto.setPesel(customer.getPesel());
-        customerDto.setCreditId(customer.getCreditId());
         return customerDto;
     }
 
@@ -49,7 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setFirstName(customerDto.getFirstName());
         customer.setSurname(customerDto.getSurname());
         customer.setPesel(customerDto.getPesel());
-        customer.setCreditId(customerDto.getCreditId());
         return customer;
     }
 

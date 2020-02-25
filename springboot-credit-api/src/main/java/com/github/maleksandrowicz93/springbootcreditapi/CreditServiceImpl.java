@@ -23,17 +23,24 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public int createCredit(CreditApplicationDto creditApplicationDto) {
-        int creditId = createCreditFromApplication(creditApplicationDto).getId();
+        Integer creditId = createCreditFromApplication(creditApplicationDto).getId();
         ProductDto productDto = creditApplicationDto.getProductDto();
-        productDto.setCreditId(creditId);
+        CustomerDto customerDto = creditApplicationDto.getCustomerDto();
+
         String productUrl = "http://" + HOST_NAME + ":8020/product";
+        String productIdUrl = productUrl.concat("/creditId");
+        log.info("Sending credit id for new product request...");
+        restService.post(productIdUrl, creditId);
         log.info("Sending add new product request...");
         restService.post(productUrl, productDto);
-        CustomerDto customerDto = creditApplicationDto.getCustomerDto();
-        customerDto.setCreditId(creditId);
+
         String customerUrl = "http://" + HOST_NAME + ":8010/customer";
+        String customerIdUrl = customerUrl.concat("/creditId");
+        log.info("Sending credit id for new customer request...");
+        restService.post(customerIdUrl, creditId);
         log.info("Sending add new customer request...");
         restService.post(customerUrl, customerDto);
+
         log.info("Returning new credit id...");
         return creditId;
     }
@@ -81,20 +88,6 @@ public class CreditServiceImpl implements CreditService {
         return list;
     }
 
-//    private List<CustomerDto> getCustomers() {
-//        String customerUrl = "http://" + HOST_NAME + ":8010/customer";
-//        log.info("Sending request for get customers...");
-//        CustomerDto[] customerDtos = (CustomerDto[]) restService.getResponseBody(customerUrl, CustomerDto[].class);
-//        return  (customerDtos != null) ? Arrays.asList(customerDtos) : new ArrayList<>();
-//    }
-
-//    private List<ProductDto> getProducts() {
-//        String productUrl = "http://" + HOST_NAME + ":8020/product";
-//        log.info("Sending request for get products...");
-//        ProductDto[] productDtos = (ProductDto[]) restService.getResponseBody(productUrl, ProductDto[].class);
-//        return  (productDtos != null) ? Arrays.asList(productDtos) : new ArrayList<>();
-//    }
-
     private List<CreditApplicationDto> createCreditReport(
             List<Credit> credits,
             List<CustomerDto> customerDtoList,
@@ -103,8 +96,6 @@ public class CreditServiceImpl implements CreditService {
         log.info("Preparing credit report...");
         List<CreditApplicationDto> report = new ArrayList<>();
         credits.sort(Comparator.comparing(Credit::getId));
-        customerDtoList.sort(Comparator.comparing(CustomerDto::getCreditId));
-        productDtoList.sort(Comparator.comparing(ProductDto::getCreditId));
         for (int i = 0; i < credits.size(); i++) {
             log.info("Adding credit report entry...");
             Credit c = credits.get(i);

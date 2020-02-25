@@ -15,6 +15,7 @@ public class CustomerApi {
     private CustomerService customerService;
 
     private List<Integer> creditIds = new ArrayList<>();
+    private int creditId = 0;
 
     @GetMapping()
     public List<CustomerDto> GetCustomers() {
@@ -25,12 +26,18 @@ public class CustomerApi {
     @PostMapping()
     public void CreateCustomer (@RequestBody CustomerDto customerDto) {
         Customer customer = customerService.convertFromDto(customerDto);
+        customer.setCreditId(creditId);
         customerService.saveCustomer(customer);
     }
 
     @PostMapping("/ids")
     private void setCreditIds(@RequestBody Integer[] ids) {
         creditIds = Arrays.asList(ids);
+    }
+
+    @PostMapping("/creditId")
+    private  void setCreditId(@RequestBody int id) {
+        creditId = id;
     }
 
 }

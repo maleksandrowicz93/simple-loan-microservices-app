@@ -15,6 +15,7 @@ public class ProductApi {
     private ProductService productService;
 
     private List<Integer> creditIds = new ArrayList<>();
+    private int creditId = 0;
 
     @GetMapping()
     public List<ProductDto> GetProducts() {
@@ -25,12 +26,18 @@ public class ProductApi {
     @PostMapping()
     public void CreateProduct(@RequestBody ProductDto productDto) {
         Product product = productService.convertFromDto(productDto);
+        product.setCreditId(creditId);
         productService.saveProduct(product);
     }
 
     @PostMapping("/ids")
     private void setCreditIds(@RequestBody Integer[] ids) {
         creditIds = Arrays.asList(ids);
+    }
+
+    @PostMapping("/creditId")
+    private  void setCreditId(@RequestBody int id) {
+        creditId = id;
     }
 
 }
