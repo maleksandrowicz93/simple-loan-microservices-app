@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +28,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> convertFromProductList(List<Product> products) {
         log.info("Converting Product list to ProductDto one...");
-        List<ProductDto> productDtoList = new ArrayList<>();
-        products.forEach(p -> productDtoList.add(convertFromProduct(p)));
-        return productDtoList;
+        return products.stream()
+                .sorted(Comparator.comparing(Product::getCreditId))
+                .map(this::convertFromProduct)
+                .collect(Collectors.toList());
     }
 
     private ProductDto convertFromProduct(Product product) {
@@ -37,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
         ProductDto productDto = new ProductDto();
         productDto.setProductName(product.getProductName());
         productDto.setValue(product.getValue());
-        productDto.setCreditId(product.getCreditId());
         return productDto;
     }
 
@@ -47,7 +48,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product();
         product.setProductName(productDto.getProductName());
         product.setValue(productDto.getValue());
-        product.setCreditId(productDto.getCreditId());
         return product;
     }
 

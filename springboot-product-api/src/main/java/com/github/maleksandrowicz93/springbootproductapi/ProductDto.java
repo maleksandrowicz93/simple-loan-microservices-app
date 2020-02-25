@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ProductDto {
 
-    private int creditId;
     private ProductEnum productName;
     private Integer value;
 

@@ -86,7 +86,6 @@ class ProductServiceImplTest {
     void convert_from_dto() {
         //given
         ProductDto toConvert = new ProductDto(
-                expectedProduct.getCreditId(),
                 expectedProduct.getProductName(),
                 expectedProduct.getValue()
         );
@@ -95,7 +94,7 @@ class ProductServiceImplTest {
         //then
         assertTrue(expectedProduct.getProductName().equals(converted.getProductName())
                 && expectedProduct.getValue().intValue() == converted.getValue().intValue()
-                && expectedProduct.getCreditId().intValue() == converted.getCreditId().intValue());
+        );
     }
 
     @Test
@@ -111,7 +110,7 @@ class ProductServiceImplTest {
             ProductDto productDto = productDtoList.get(i);
             assertTrue(productDto.getProductName().equals(p.getProductName())
                     && productDto.getValue() == p.getValue().intValue()
-                    && productDto.getCreditId() == p.getCreditId());
+            );
         }
     }
 

@@ -1,4 +1,4 @@
-package com.github.maleksandrowicz93.springbootcustomerapi;
+package com.github.maleksandrowicz93.springbootcreditapi;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
