@@ -16,7 +16,7 @@ public class CreditApplicationValidator {
             return false;
 
         try {
-            Integer.parseInt(pesel);
+            Long.parseLong(pesel);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
