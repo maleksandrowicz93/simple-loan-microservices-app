@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -89,8 +88,7 @@ class CustomerServiceImplTest {
         CustomerDto toConvert = new CustomerDto(
                 expectedCustomer.getFirstName(),
                 expectedCustomer.getSurname(),
-                expectedCustomer.getPesel(),
-                expectedCustomer.getCreditId()
+                expectedCustomer.getPesel()
         );
         //when
         Customer converted = customerService.convertFromDto(toConvert);
@@ -98,7 +96,7 @@ class CustomerServiceImplTest {
         assertTrue(expectedCustomer.getFirstName().equals(converted.getFirstName())
                 && expectedCustomer.getSurname().equals(converted.getSurname())
                 && expectedCustomer.getPesel().equals(converted.getPesel())
-                && expectedCustomer.getCreditId().intValue() == converted.getCreditId().intValue());
+        );
     }
 
     @Test
@@ -115,7 +113,7 @@ class CustomerServiceImplTest {
             assertTrue(customerDto.getFirstName().equals(c.getFirstName())
                     && customerDto.getSurname().equals(c.getSurname())
                     && customerDto.getPesel().equals(c.getPesel())
-                    && customerDto.getCreditId() == c.getCreditId());
+            );
         }
     }
 

@@ -103,16 +103,12 @@ class CreditServiceImplTest {
     private List<CustomerDto> prepareMockCustomerData() {
         List<CustomerDto> customerDtoList = new ArrayList<>();
         CustomerDto customerDto1 = new CustomerDto("name1", "surname1", "00000000001");
-        customerDto1.setCreditId(1);
         customerDtoList.add(customerDto1);
         CustomerDto customerDto2 = new CustomerDto("name2", "surname2", "00000000002");
-        customerDto2.setCreditId(2);
         customerDtoList.add(customerDto2);
         CustomerDto customerDto3 = new CustomerDto("name3", "surname3", "00000000003");
-        customerDto3.setCreditId(3);
         customerDtoList.add(customerDto3);
         CustomerDto customerDto4 = new CustomerDto("name4", "surname4", "00000000004");
-        customerDto4.setCreditId(4);
         customerDtoList.add(customerDto4);
         return customerDtoList;
     }
@@ -120,16 +116,12 @@ class CreditServiceImplTest {
     private List<ProductDto> prepareMockProductData() {
         List<ProductDto> productDtoList = new ArrayList<>();
         ProductDto productDto1 = new ProductDto(ProductEnum.CONSUMER, 1000);
-        productDto1.setCreditId(1);
         productDtoList.add(productDto1);
         ProductDto productDto2 = new ProductDto(ProductEnum.INVESTMENT, 20000);
-        productDto2.setCreditId(2);
         productDtoList.add(productDto2);
         ProductDto productDto3 = new ProductDto(ProductEnum.MORTGAGE, 300000);
-        productDto3.setCreditId(3);
         productDtoList.add(productDto3);
         ProductDto productDto4 = new ProductDto(ProductEnum.CONSOLIDATION, 400);
-        productDto4.setCreditId(4);
         productDtoList.add(productDto4);
         return productDtoList;
     }
