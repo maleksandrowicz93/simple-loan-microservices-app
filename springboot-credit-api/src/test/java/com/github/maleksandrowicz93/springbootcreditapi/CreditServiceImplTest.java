@@ -25,6 +25,8 @@ class CreditServiceImplTest {
     @Mock
     private CreditRepo creditRepo;
     @Mock
+    private RestServiceImpl restService;
+    @Mock
     private ApiDataGetter apiDataGetter;
     @InjectMocks
     private CreditServiceImpl creditService;
