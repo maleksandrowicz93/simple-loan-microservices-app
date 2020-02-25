@@ -26,10 +26,13 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public int createCredit(CreditApplicationDto creditApplicationDto) {
 
-        if(!checkIfApplicationIsCorrect(creditApplicationDto)) {
+        CreditApplicationValidator validator = new CreditApplicationValidator();
+        if(!validator.checkIfApplicationIsCorrect(creditApplicationDto)) {
             log.info("Credit application is incorrect!");
             return 0;
         }
+
+        trimApplicationValues(creditApplicationDto);
 
         Integer creditId = createCreditFromApplication(creditApplicationDto).getId();
         ProductDto productDto = creditApplicationDto.getProductDto();
@@ -73,42 +76,6 @@ public class CreditServiceImpl implements CreditService {
             creditReport.addAll(createCreditReport(credits, customerDtoList, productDtoList));
         }
         return creditReport;
-    }
-
-    private boolean checkIfApplicationIsCorrect(CreditApplicationDto creditApplicationDto) {
-
-        trimApplicationValues(creditApplicationDto);
-        CustomerDto customer = creditApplicationDto.getCustomerDto();
-        ProductDto product = creditApplicationDto.getProductDto();
-        String pesel = customer.getPesel();
-
-        if (product.getValue() < 100 || pesel.length() != 11)
-            return false;
-
-        try {
-            Integer.parseInt(pesel);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        List<String> commonStrings = new ArrayList<>();
-        commonStrings.add(creditApplicationDto.getCreditName());
-        commonStrings.add(customer.getFirstName());
-        commonStrings.add(customer.getSurname());
-
-        for (String s : commonStrings) {
-            if (s == null || s.length() < 2)
-                return false;
-            try {
-                Integer.parseInt(s);
-                return false;
-            } catch (Exception ignored) {
-            }
-        }
-
-        return true;
-
     }
 
     private void trimApplicationValues(CreditApplicationDto creditApplicationDto) {
