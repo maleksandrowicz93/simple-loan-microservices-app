@@ -3,11 +3,12 @@ package com.github.maleksandrowicz93.springbootcreditapi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class RestServiceImpl <T> implements RestService {
+public class RestServiceImpl implements RestService {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -23,7 +24,11 @@ public class RestServiceImpl <T> implements RestService {
     }
 
     @Override
-    public Object get(String url, Class aClass) {
+    public Object getResponseBody(String url, Class aClass) {
+        return get(url, aClass).getBody();
+    }
+
+    private ResponseEntity<?> get(String url, Class aClass) {
         return restTemplate.exchange(
                 url,
                 HttpMethod.GET,

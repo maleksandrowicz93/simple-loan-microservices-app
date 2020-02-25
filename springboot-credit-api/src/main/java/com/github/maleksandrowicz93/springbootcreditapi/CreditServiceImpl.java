@@ -84,16 +84,14 @@ public class CreditServiceImpl implements CreditService {
     private List<CustomerDto> getCustomers() {
         String customerUrl = "http://" + HOST_NAME + ":8010/customer";
         log.info("Sending request for get customers...");
-        ResponseEntity<CustomerDto[]> GetCustomersExchange = (ResponseEntity<CustomerDto[]>) restService.get(customerUrl, CustomerDto[].class);
-        CustomerDto[] customerDtos = GetCustomersExchange.getBody();
+        CustomerDto[] customerDtos = (CustomerDto[]) restService.getResponseBody(customerUrl, CustomerDto[].class);
         return  (customerDtos != null) ? Arrays.asList(customerDtos) : new ArrayList<>();
     }
 
     private List<ProductDto> getProducts() {
         String productUrl = "http://" + HOST_NAME + ":8020/product";
         log.info("Sending request for get products...");
-        ResponseEntity<ProductDto[]> GetProductsExchange = (ResponseEntity<ProductDto[]>) restService.get(productUrl, ProductDto[].class);
-        ProductDto[] productDtos = GetProductsExchange.getBody();
+        ProductDto[] productDtos = (ProductDto[]) restService.getResponseBody(productUrl, ProductDto[].class);
         return  (productDtos != null) ? Arrays.asList(productDtos) : new ArrayList<>();
     }
 
