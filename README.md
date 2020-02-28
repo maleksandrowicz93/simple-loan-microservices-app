@@ -27,14 +27,14 @@ Do testowania plikacji i wywoływania usług zaleca się aplikację postman. Pon
 		"productName": "CARD",
 		"value": 500
 	},
-	"creditName": "mati_aleks_0000000_CARD_500"
+	"creditName": "john_brennox_0000000_CARD_500"
 }
 
 Zastosowano walidację o następujących warunkach brzegowych:
 
 	- odrzuca się zapytanie z polami typu String o mniejszej ilości znaków, niż 2,
-	- odrzuca się zapytanie z polami typu String, w których zawarta jest liczba,
-	- odrzuca się zapytanie z numerem pesel o długości innej niż 1 znaków,
+	- odrzuca się zapytanie z polami typu String, jeśli są parsowalne do liczby(poza nr pesel),
+	- odrzuca się zapytanie z numerem pesel o długości innej niż 11 znaków,
 	- odrzuca się zapytanie z numerem pesel zawierających litery,
 	- odrzuca się zapytanie z kwotą mniejszą niż 100, 
 	- odrzuca się zapytanie z nullami.
